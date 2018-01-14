@@ -18,7 +18,7 @@ defmodule Collaboreighteen.Offerings do
 
   """
   def list_skills do
-    Repo.all(Skill) |> Repo.preload(people: [:locations])
+    Repo.all(Skill) |> Repo.preload(people_skills: [person: [:locations]])
   end
 
   @doc """

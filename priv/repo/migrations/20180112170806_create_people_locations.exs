@@ -11,5 +11,6 @@ defmodule Collaboreighteen.Repo.Migrations.CreatePeopleLocations do
 
     create(index(:people_locations, [:person_id]))
     create(index(:people_locations, [:location_id]))
+    create(unique_index(:people_locations, [:person_id, :location_id]))
   end
 end

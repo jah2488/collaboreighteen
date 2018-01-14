@@ -22,12 +22,21 @@ alias Collaboreighteen.Collaborators.PersonSkill
 
 defmodule Parser do
   def structure_row({:ok, row}) do
+    skills =
+      row
+      |> Enum.at(1)
+      |> String.downcase()
+      |> String.replace(~r/[^a-zA-Z\s]/, " ")
+      |> String.trim()
+      |> String.split(" ")
+
     %{
       name: Enum.at(row, 0),
-      skills: String.split(Enum.at(row, 1), " "),
+      skills: skills,
       email: Enum.at(row, 2),
       location: String.downcase(Enum.at(row, 3)),
-      notes: Enum.at(row, 4)
+      notes: Enum.at(row, 4),
+      full_notes: Enum.at(row, 1)
     }
   end
 
@@ -42,7 +51,7 @@ defmodule Parser do
           IO.inspect("You again?? #{row.email}")
           {:ok, Repo.get_by(Person, email: row.email)}
         else
-          Repo.insert(%Person{name: row.name, email: row.email})
+          Repo.insert(%Person{name: row.name, email: row.email, notes: row.full_notes})
         end
 
       {:ok, location} = Repo.insert(%Location{name: row.location})
@@ -52,24 +61,22 @@ defmodule Parser do
 
       skills =
         Enum.map(row.skills, fn skill_name ->
-          skills = Repo.all(Skill) |> Enum.map(fn sk -> sk.name end)
+          skills = Repo.all(Skill)
 
-          skill_name = String.replace(skill_name, ~r/[^a-zA-Z\d\s:]/, "")
-          included? = Enum.member?(skills, skill_name)
-
-          too_similar? =
-            Enum.any?(skills, fn skill -> String.jaro_distance(skill, skill_name) > 0.95 end)
+          too_similar =
+            Enum.find(skills, fn skill -> String.jaro_distance(skill.name, skill_name) > 0.95 end)
 
           cond do
-            included? ->
-              IO.inspect('Dup found!')
-              IO.inspect("Skill: '#{skill_name}'")
+            Enum.member?(
+              ["", " ", "or", "and", "i", "but", "for", "we", "years", "year", "skill", "skills"],
+              skill_name
+            ) ->
               nil
 
-            too_similar? ->
+            !is_nil(too_similar) ->
               IO.inspect('Oh thats too close!')
               IO.inspect("Skill: '#{skill_name}'")
-              nil
+              too_similar
 
             true ->
               {:ok, skill} = Repo.insert(%Skill{name: skill_name})
@@ -78,18 +85,27 @@ defmodule Parser do
         end)
 
       skills
-      |> Enum.reject(fn skill -> is_nil(skill) end)
+      |> Enum.reject(fn skill -> is_nil(skill) || skill == "" end)
       |> Enum.map(fn skill ->
-        {notes, payment_notes} = String.split_at(row.notes, 250)
+        pss = Repo.all(PersonSkill)
 
-        {:ok, _people_skill} =
-          Repo.insert(%PersonSkill{
-            person_id: person.id,
-            skill_id: skill.id,
-            paid: false,
-            notes: notes,
-            payment_notes: "...#{payment_notes}"
-          })
+        already_assigned? =
+          Enum.any?(pss, fn ps -> ps.person_id == person.id && ps.skill_id == skill.id end)
+
+        if already_assigned? do
+          IO.inspect("You already have this skill sillllllly")
+        else
+          {notes, payment_notes} = String.split_at(row.notes, 250)
+
+          {:ok, _people_skill} =
+            Repo.insert(%PersonSkill{
+              person_id: person.id,
+              skill_id: skill.id,
+              paid: false,
+              notes: notes,
+              payment_notes: "...#{payment_notes}"
+            })
+        end
       end)
     end
   end

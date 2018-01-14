@@ -16,7 +16,8 @@ defmodule CollaboreighteenWeb.SkillView do
     %{
       id: skill.id,
       name: skill.name,
-      people: render_many(skill.people, CollaboreighteenWeb.PersonView, "person.json")
+      people:
+        render_many(skill.people_skills, CollaboreighteenWeb.PersonSkillView, "person_skill.json")
     }
   end
 end

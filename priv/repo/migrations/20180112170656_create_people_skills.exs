@@ -14,5 +14,6 @@ defmodule Collaboreighteen.Repo.Migrations.CreatePeopleSkills do
 
     create(index(:people_skills, [:person_id]))
     create(index(:people_skills, [:skill_id]))
+    create(unique_index(:people_skills, [:person_id, :skill_id]))
   end
 end

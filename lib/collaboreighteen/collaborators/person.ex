@@ -9,6 +9,7 @@ defmodule Collaboreighteen.Collaborators.Person do
   schema "people" do
     field(:name, :string)
     field(:email, :string)
+    field(:notes, :string)
     field(:edit_token, :string)
     has_many(:people_skills, PersonSkill)
     many_to_many(:skills, Skill, join_through: "people_skills")
