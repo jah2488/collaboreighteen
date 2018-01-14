@@ -45,12 +45,8 @@ defmodule CollaboreighteenWeb.Endpoint do
   )
 
   plug(
-    CORSPlug,
-    origin: [
-      "http://localhost:3000",
-      "https://collaboreighteen.online/",
-      "http://collaboreighteen.online/"
-    ]
+    CORSPlug
+    # ,origin: [ "http://localhost:3000", "https://collaboreighteen.online/", "http://collaboreighteen.online/" ]
   )
 
   plug(CollaboreighteenWeb.Router)
