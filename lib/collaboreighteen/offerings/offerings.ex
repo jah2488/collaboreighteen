@@ -18,7 +18,12 @@ defmodule Collaboreighteen.Offerings do
 
   """
   def list_skills do
-    Repo.all(Skill) |> Repo.preload(people_skills: [person: [:locations]])
+    {limit, _} = Integer.parse(System.get_env("MAX_QUERY") || "2000")
+
+    Skill
+    |> preload(people_skills: [person: [:locations]])
+    |> limit(^limit)
+    |> Repo.all()
   end
 
   @doc """
