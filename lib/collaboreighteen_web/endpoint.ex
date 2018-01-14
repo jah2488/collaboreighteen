@@ -44,7 +44,15 @@ defmodule CollaboreighteenWeb.Endpoint do
     signing_salt: "0IGzzEWA"
   )
 
-  plug(CORSPlug, origin: ["http://localhost:3000", "https://collaboreighteen.online/"])
+  plug(
+    CORSPlug,
+    origin: [
+      "http://localhost:3000",
+      "https://collaboreighteen.online/",
+      "http://collaboreighteen.online/"
+    ]
+  )
+
   plug(CollaboreighteenWeb.Router)
 
   @doc """
