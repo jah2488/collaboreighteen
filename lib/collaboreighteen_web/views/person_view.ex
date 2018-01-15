@@ -16,7 +16,8 @@ defmodule CollaboreighteenWeb.PersonView do
       name: person.name,
       email: Regex.replace(~r/@.*\.[a-z]{2,9}/, person.email, "@*****.com"),
       location: render_many(person.locations, CollaboreighteenWeb.LocationView, "location.json"),
-      skills: Enum.map(person.skills, fn s -> s.name end)
+      skills: Enum.map(person.skills, fn s -> s.name end),
+      notes: person.notes
     }
   end
 end
