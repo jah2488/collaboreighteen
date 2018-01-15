@@ -11,10 +11,12 @@ defmodule CollaboreighteenWeb.LocationView do
   end
 
   def render("location.json", %{location: location}) do
-    %{id: location.id,
+    %{
+      id: location.id,
       name: location.name,
       city: location.city,
       state: location.state,
-      country: location.country}
+      country: location.country
+    }
   end
 end

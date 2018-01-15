@@ -21,7 +21,7 @@ defmodule Collaboreighteen.Offerings do
     {limit, _} = Integer.parse(System.get_env("MAX_QUERY") || "2000")
 
     Skill
-    |> preload(people_skills: [person: [:locations]])
+    |> preload(people_skills: [person: [:locations, :skills]])
     |> limit(^limit)
     |> Repo.all()
   end

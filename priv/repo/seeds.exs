@@ -68,9 +68,49 @@ defmodule Parser do
 
           cond do
             Enum.member?(
-              ["", " ", "or", "and", "i", "but", "for", "we", "years", "year", "skill", "skills"],
+              [
+                "",
+                " ",
+                "or",
+                "and",
+                "i",
+                "but",
+                "for",
+                "we",
+                "years",
+                "year",
+                "skill",
+                "skills",
+                "a",
+                "to",
+                "also",
+                "with",
+                "in",
+                "of",
+                "m",
+                "can",
+                "have",
+                "on",
+                "the",
+                "do",
+                "you",
+                "help",
+                "if",
+                "some",
+                "about",
+                "as",
+                "good",
+                "an",
+                "not",
+                "d",
+                "is",
+                "that"
+              ],
               skill_name
             ) ->
+              nil
+
+            String.length(skill_name) < 3 ->
               nil
 
             !is_nil(too_similar) ->

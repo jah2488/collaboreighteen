@@ -9,7 +9,7 @@ defmodule CollaboreighteenWeb.SearchController do
     render(conn, "index.json", skills: Offerings.list_skills())
   end
 
-  def search(conn, %{"query" => search_query}) do
+  def search(conn, %{"query" => _search_query}) do
     render(conn, "search.json", results: [])
   end
 end
